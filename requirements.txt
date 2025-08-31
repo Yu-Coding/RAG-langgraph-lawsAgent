@@ -1,0 +1,56 @@
+# Core frameworks
+fastapi
+uvicorn
+langchain-openai
+
+# LangGraph + LangChain core
+langgraph>=0.0.32
+langchain[community]
+langchain-community
+langchain-huggingface>=0.0.5
+
+# For the photo scanning
+pytesseract 
+pillow
+
+# Templates & form upload
+jinja2
+python-multipart
+
+# File handling
+unstructured[pdf,docx]
+python-docx # for generating Word documents
+
+# Vector store
+faiss-cpu>=1.7.4
+
+# Embedding model
+sentence-transformers>=2.2.2
+transformers>=4.41.1
+
+# OpenAI-compatible tools (optional, for completion)
+openai>=1.30.5
+tiktoken>=0.7.0
+
+# Document loader support
+langchain-unstructured
+pdfminer.six>=20231228
+python-docx>=1.1.0
+
+# Web app / optional deployment
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
+
+# CV library
+opencv-contrib-python
+
+# File utilities
+python-dotenv>=1.0.1
+
+# (Optional) For graph visualization
+graphviz>=0.20.3
+
+
+# Optional but recommended
+pydantic
+watchfiles  # used by Uvicorn reload

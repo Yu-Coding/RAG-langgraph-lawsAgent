@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>智能法律助理</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f8f9fb;
+        }
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 700px;
+            min-width: 320px;
+            padding: 24px 8px;
+            box-sizing: border-box;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
+            padding-bottom: 70px; /* 留出输入区高度 */
+            margin-top: 60px; /* 或 padding-top: 60px; */
+        }
+        .chat-title {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #222;
+            letter-spacing: 1px;
+            z-index: 20;
+        }
+        #chat-box {
+            width: 100%;
+            min-height: 240px;
+            max-height: none;
+            padding: 0;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            /* Custom scrollbar styles */
+            scrollbar-width: thin;
+            scrollbar-color: #d1d5db #f8f9fb; /* thumb track for Firefox */
+        }
+        /* Chrome, Safari, Edge */
+        #chat-box::-webkit-scrollbar {
+            width: 10px;
+        }
+        #chat-box::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 8px;
+        }
+        #chat-box::-webkit-scrollbar-track {
+            background: #f8f9fb;
+        }
+        #chat-box::-webkit-scrollbar-button {
+            display: block;
+            height: 16px;
+            background: #f8f9fb;
+        }
+        #chat-box p {
+            margin: 8px 16px;
+            padding: 10px 16px;
+            border-radius: 18px;
+            max-width: 75%;
+            word-break: break-all;
+            font-size: 1.08rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+        #chat-box p strong {
+            color: #2a7ae2;
+        }
+        #chat-box p:nth-child(odd) {
+            background: #e6f0fd;
+            align-self: flex-end;
+            color: #222;
+        }
+        #chat-box p:nth-child(even) {
+            background: #fff;
+            align-self: flex-start;
+            color: #222;
+        }
+        .input-row {
+            width: 100%;
+            max-width: 700px;
+            display: flex;
+            gap: 8px;
+            background: transparent;
+            align-items: center;
+        }
+        #user-input {
+            flex: 1;
+            min-width: 0;
+            padding: 8px;
+            font-size: 1rem;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        button[type="submit"] {
+            padding: 8px 18px;
+            font-size: 1rem;
+            border-radius: 6px;
+            border: none;
+            background: #2a7ae2;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button[type="submit"]:hover {
+            background: #185fa7;
+        }
+        #lang-btn {
+            position: absolute;
+            top: 24px;
+            right: 32px;
+            z-index: 10;
+            padding: 4px 12px;
+            border-radius: 6px;
+            border: 1px solid #2a7ae2;
+            background: #fff;
+            color: #2a7ae2;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        #lang-btn:hover {
+            background: #e8f0fe;
+        }
+        .fixed-input-row {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100vw;
+            background: transparent;
+            padding: 12px 0 12px 0;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            box-shadow: none;
+            border: none;
+        }
+        .fixed-upload-row {
+            position: fixed;
+            left: 0;
+            bottom: 60px;
+            width: 100vw;
+            background: #f8f9fb;
+            padding: 8px 0 8px 0;
+            z-index: 101;
+            box-shadow: 0 -1px 4px rgba(0,0,0,0.03);
+            display: flex;
+            justify-content: center;
+        }
+        #file-input {
+            margin-right: 4px;
+            background: transparent;
+            border: none;
+        }
+        .file-label {
+            display: inline-block;
+            padding: 8px 16px;
+            font-size: 1rem;
+            color: #222;
+            background: #ededed;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 8px;
+            transition: background 0.2s;
+            border: none;
+            white-space: nowrap;
+        }
+        .file-label:hover {
+            background: #cccccc;
+        }
+        #file-input {
+            display: none;
+        }
+        @media (max-width: 600px) {
+            .chat-container {
+                max-width: 98vw;
+                padding: 8px 2px;
+            }
+            #chat-box {
+                min-height: 160px;
+                height: 30vh;
+            }
+            #lang-btn {
+                right: 8px;
+                top: 8px;
+            }
+            .chat-title {
+                top: 6px;
+                left: 6px;
+                font-size: 1.1rem;
+            }
+            .fixed-upload-row {
+                padding: 4px 0 4px 0;
+                bottom: 48px;
+            }
+            .fixed-input-row {
+                padding: 6px 0 6px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button id="lang-btn">English</button>
+    <div class="chat-title" id="chat-title">智能法律助理</div>
+    <div class="chat-container">
+
+        <div id="chat-box">
+            <!-- 聊天记录 -->
+        </div>
+
+    </div>
+    <form id="chat-form" class="fixed-input-row">
+        <div class="input-row">
+            <label class="file-label" id="file-label" for="file-input">上传合同PDF或者图片</label>
+            <input type="file" name="file" id="file-input">
+            <input type="text" id="user-input" placeholder="请输入您的问题或信息..." autocomplete="off">
+            <button type="submit" id="send-btn">发送</button>
+        </div>
+    </form>
+
+    <script>
+        const texts = {
+            zh: {
+                title: "智能法律助理",
+                inputPlaceholder: "请输入您的问题或信息...",
+                send: "发送",
+                upload: "上传",
+                thinking: "正在思考...",
+                downloaded: "合同已下载完毕！",
+                langBtn: "English",
+                fileLabel: "上传合同PDF或者图片"
+            },
+            en: {
+                title: "Intelligent Legal Assistant",
+                inputPlaceholder: "Please enter your question or information...",
+                send: "Send",
+                upload: "Upload",
+                thinking: "Thinking...",
+                downloaded: "Contract downloaded!",
+                langBtn: "中文",
+                fileLabel: "Upload contract PDF or image"
+            }
+        };
+
+        let currentLang = 'zh';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.title = texts[lang].title;
+            document.getElementById('chat-title').innerText = texts[lang].title;
+            document.getElementById('user-input').placeholder = texts[lang].inputPlaceholder;
+            document.getElementById('send-btn').innerText = texts[lang].send;
+            document.getElementById('lang-btn').innerText = texts[lang].langBtn;
+            document.getElementById('file-label').innerText = texts[lang].fileLabel;
+        }
+
+        document.getElementById('lang-btn').onclick = function() {
+            setLanguage(currentLang === 'zh' ? 'en' : 'zh');
+        };
+
+        // 页面加载时设置默认语言
+        setLanguage(currentLang);
+
+        const chatBox = document.getElementById('chat-box');
+        const chatForm = document.getElementById('chat-form');
+        const userInput = document.getElementById('user-input');
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            // Clear input immediately after getting the message
+            userInput.value = '';
+
+            appendMessage('用户', message);
+
+            // Add loading indicator
+            const loadingId = appendMessage('系统', `<span id="loading-indicator">${texts[currentLang].thinking}</span>`);
+
+            // 发请求到后端
+            const response = await fetch('/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'user_input=' + encodeURIComponent(message)
+            });
+
+            if (response.headers.get('Content-Type') === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                // 如果是Word文件，触发下载
+                const blob = await response.blob();
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = '租赁合同.docx';
+                link.click();
+                updateMessage(loadingId, '系统', texts[currentLang].downloaded);
+            } else {
+                // 如果是普通文字
+                const reply = await response.text();
+                updateMessage(loadingId, '系统', reply);
+            }
+        });
+
+        document.getElementById('file-input').addEventListener('change', function() {
+            if (this.files.length > 0) {
+                // 构造 FormData 并用 fetch 上传
+                const formData = new FormData();
+                formData.append('file', this.files[0]);
+                fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                }).then(() => {
+                    this.value = ''; // 上传后清空
+                });
+            }
+        });
+
+        // Returns the id of the message element
+        function appendMessage(sender, message) {
+            const p = document.createElement('p');
+            const id = 'msg-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
+            p.id = id;
+            p.innerHTML = `<strong>${sender}:</strong> ${message}`;
+            chatBox.appendChild(p);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return id;
+        }
+
+        // Update the message with a given id
+        function updateMessage(id, sender, message) {
+            const p = document.getElementById(id);
+            if (p) {
+                p.innerHTML = `<strong>${sender}:</strong> ${message}`;
+            }
+        }
+    </script>
+</body>
+</html>

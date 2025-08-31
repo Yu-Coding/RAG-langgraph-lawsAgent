@@ -1,0 +1,38 @@
+# Environment & cache
+venv/
+__pycache__/
+
+# Git
+.git/
+
+# User-generated content and data
+uploads/
+processed/
+my_vectorstore_path/
+*.db
+
+# Python compiled files
+*.pyc
+*.pyo
+
+# Log files
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE-specific files
+.vscode/
+.idea/
+*.swp
+*.bak
+
+# Development/test scripts and files (not needed for production)
+delete.py
+rebuild_vectorstore.py
+build_and_run.sh
+test_feiss.py
+Project Structure.bash
+law_test.txt
+租赁合同.docx 
